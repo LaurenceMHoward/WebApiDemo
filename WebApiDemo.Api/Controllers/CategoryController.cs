@@ -17,16 +17,8 @@ using Validators.Validation;
 using WebApiDemo.Api.Controllers.Base;
 
 [ApiVersion("1.0")]
-public class CategoryController : BaseController
+public class CategoryController(IMediator mediator, CategoryValidator categoryDbValidator) : BaseController(mediator)
 {
-    private readonly CategoryValidator _dbValidator;
-
-    public CategoryController(IMediator mediator, CategoryValidator categoryDbValidator)
-        : base(mediator)
-    {
-        this._dbValidator = categoryDbValidator;
-    }
-
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -101,7 +93,7 @@ public class CategoryController : BaseController
 
     private async Task DatabaseValidation(CategoryDto item, CancellationToken token)
     {
-        ValidationResult? validation = await this._dbValidator.ValidateAsync(item, token);
+        ValidationResult? validation = await categoryDbValidator.ValidateAsync(item, token);
         validation.AddToModelState(ModelState, "database");
     }
 

@@ -8,15 +8,9 @@ namespace WebApiDemo.Api.Startup;
 using FluentValidation;
 using Microsoft.Extensions.Configuration;
 
-public class Startup
+public class Startup(IConfiguration configuration)
 {
-    private readonly IConfiguration _configuration;
     private readonly string _webApiDemoDbConfig = "WebApiDemoDb";
-
-    public Startup(IConfiguration configuration)
-    {
-        this._configuration = configuration;
-    }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
@@ -57,7 +51,7 @@ public class Startup
 
         services.AddDbContext<IWebApiDemoDbContext, WebApiDemoDbContext>(opt =>
         {
-            opt.UseSqlServer(_configuration.GetConnectionString(_webApiDemoDbConfig));
+            opt.UseSqlServer(configuration.GetConnectionString(_webApiDemoDbConfig));
             opt.UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
         });
         services.AddSwaggerGen();

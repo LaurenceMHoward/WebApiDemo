@@ -30,8 +30,8 @@ public class CategoryControllerTests
     public async Task SaveCategory_Failure()
     {
         // arrange
-        var item = new CategoryDto() { Category = "Bumpy", SubCategory = "Tummy" };
-        var returnItem = new CategoryDto() { Category = "Bumpy", SubCategory = "Tummy", Id = Guid.NewGuid() };
+        CategoryDto item = new () { Category = "Bumpy", SubCategory = "Tummy" };
+        CategoryDto returnItem = new () { Category = "Bumpy", SubCategory = "Tummy", Id = Guid.NewGuid() };
 
         _validator.Setup(
                 x => x.ValidateAsync(It.IsAny<ValidationContext<CategoryDto>>(), It.IsAny<CancellationToken>()))
@@ -50,9 +50,9 @@ public class CategoryControllerTests
     public async Task SaveCategory_InvalidModeState_Failure()
     {
         // arrange
-        var item = new CategoryDto() { Category = "Bumpy", SubCategory = "Tummy" };
-        var returnItem = new CategoryDto() { Category = "Bumpy", SubCategory = "Tummy", Id = Guid.NewGuid() };
-        var list = new List<ValidationFailure>() { new ValidationFailure("A", "Not So good") };
+        CategoryDto item = new () { Category = "Bumpy", SubCategory = "Tummy" };
+        CategoryDto returnItem = new () { Category = "Bumpy", SubCategory = "Tummy", Id = Guid.NewGuid() };
+        List<ValidationFailure> list = [new ValidationFailure("A", "Not So good")];
 
         _validator.Setup(
                 x => x.ValidateAsync(It.IsAny<ValidationContext<CategoryDto>>(), It.IsAny<CancellationToken>()))
@@ -61,7 +61,7 @@ public class CategoryControllerTests
         _mediator.Setup(x => x.Send(It.IsAny<CategoryCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(returnItem);
 
-        var result = await _sut.CreateCategoryAsync(item, default);
+        ActionResult<CategoryDto> result = await _sut.CreateCategoryAsync(item, default);
 
         StatusCodeFromActionResult(result).Should().Be(HttpStatusCode.BadRequest);
     }
@@ -70,8 +70,8 @@ public class CategoryControllerTests
     public async Task SaveCategory_Success()
     {
         // arrange
-        var item = new CategoryDto() { Category = "Bumpy", SubCategory = "Tummy" };
-        var returnItem = new CategoryDto() { Category = "Bumpy", SubCategory = "Tummy", Id = Guid.NewGuid() };
+        CategoryDto item = new () { Category = "Bumpy", SubCategory = "Tummy" };
+        CategoryDto returnItem = new () { Category = "Bumpy", SubCategory = "Tummy", Id = Guid.NewGuid() };
 
         _validator.Setup(
                 x => x.ValidateAsync(It.IsAny<ValidationContext<CategoryDto>>(), It.IsAny<CancellationToken>()))
@@ -94,7 +94,7 @@ public class CategoryControllerTests
     private static HttpStatusCode? StatusCodeFromActionResult<T>(ActionResult<T> actionResult)
     {
         IConvertToActionResult convertToActionResult = actionResult;
-        var actionResultWithStatusCode = convertToActionResult.Convert() as IStatusCodeActionResult;
+        IStatusCodeActionResult? actionResultWithStatusCode = convertToActionResult.Convert() as IStatusCodeActionResult;
         return (HttpStatusCode)actionResultWithStatusCode?.StatusCode!;
     }
 }

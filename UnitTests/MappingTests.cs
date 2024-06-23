@@ -11,8 +11,8 @@ public class MappingTests
     [Fact]
     public void ToCateGoryCommand_Success()
     {
-        var input = new CategoryDto() { Category = "cat", SubCategory = "subcAt", Id = Guid.NewGuid() };
-        var result = input.ToCategoryCommand();
+        CategoryDto input = new () { Category = "cat", SubCategory = "subcAt", Id = Guid.NewGuid() };
+        CategoryCommand result = input.ToCategoryCommand();
         result.Id.Should().Be(input.Id);
         result.Category.Should().Be(input.Category);
         result.SubCategory.Should().Be(input.SubCategory);
@@ -21,8 +21,8 @@ public class MappingTests
     [Fact]
     public void ToCategoryDTO_Success()
     {
-        var input = new CategoryRecord() { Category = "cat", SubCategory = "subcAt", Id = Guid.NewGuid() };
-        var result = input.ToCategoryDto();
+        CategoryRecord input = new () { Category = "cat", SubCategory = "subcAt", Id = Guid.NewGuid() };
+        CategoryDto result = input.ToCategoryDto();
         result.Id.Should().Be(input.Id);
         result.Category.Should().Be(input.Category);
         result.SubCategory.Should().Be(input.SubCategory);
@@ -31,8 +31,8 @@ public class MappingTests
     [Fact]
     public void ToCategoryRecord_ConvertToHeaderText_Success()
     {
-        var input = new CategoryCommand() { Category = "cat", SubCategory = "subcAt", Id = Guid.NewGuid() };
-        var result = input.ToCategoryRecord();
+        CategoryCommand input = new () { Category = "cat", SubCategory = "subcAt", Id = Guid.NewGuid() };
+        CategoryRecord result = input.ToCategoryRecord();
         result.Id.ToString().Should().Be(input.Id.ToString());
         result.Category.Should().Be("Cat");
         result.SubCategory.Should().Be("Subcat");

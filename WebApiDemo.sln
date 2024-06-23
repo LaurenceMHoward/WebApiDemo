@@ -8,6 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ABCA41E3-D286-4981-8161-70CFD2BA2C5F}"
 	ProjectSection(SolutionItems) = preProject
 		README.MD = README.MD
+		RuleSet1.ruleset = RuleSet1.ruleset
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiDemo.Dal", "WebApiDemo.Dal\WebApiDemo.Dal.csproj", "{9885CA8E-CEF9-43C0-B0A4-EA78F6C7ACA5}"
@@ -22,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{BD617A99-9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTests", "IntegrationTests\IntegrationTests.csproj", "{FB88BADA-F6EA-4971-982E-1B962E66D17B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "UnitTests\UnitTests.csproj", "{DDECA79E-4077-413B-9B76-5AE69205C080}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{DDECA79E-4077-413B-9B76-5AE69205C080}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

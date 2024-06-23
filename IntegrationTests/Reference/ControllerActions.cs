@@ -1,24 +1,24 @@
 namespace IntegrationTests.Reference;
 
 using System.Net;
-using System.Text.Json;
 using System.Text;
+using System.Text.Json;
+
 using Microsoft.AspNetCore.Mvc.Testing;
+
 using WebApiDemo.Api.Startup;
 using WebApiDemo.Dal.Records;
-using WebApiDemo.Service.Domain;
 
 public class ControllerActions : IClassFixture<TestWebApplicationFactory<Startup>>
 {
+    private static readonly JsonSerializerOptions
+        s_jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
+
     private readonly HttpClient _client;
-
-    public int CategoryCount { get; set; }
-
-    public CategoryRecord FirstCategoryItem { get; set; }
 
     public ControllerActions()
     {
-        var webApplicationFactory = new TestWebApplicationFactory<Startup>();
+        TestWebApplicationFactory<Startup> webApplicationFactory = new();
         _client = webApplicationFactory.CreateClient(new WebApplicationFactoryClientOptions
         {
             AllowAutoRedirect = false
@@ -26,6 +26,15 @@ public class ControllerActions : IClassFixture<TestWebApplicationFactory<Startup
 
         this.CategoryCount = webApplicationFactory.CategoryCount();
         this.FirstCategoryItem = webApplicationFactory.GetFirstCategory();
+    }
+
+    public int CategoryCount { get; set; }
+
+    public CategoryRecord FirstCategoryItem { get; set; }
+
+    public async Task<TestResult<T>> DeleteAsync<T>(string path) where T : class
+    {
+        return await ConvertResponse<T>(await _client.DeleteAsync(path));
     }
 
     public async Task<TestResult<T>> GetAsync<T>(string path) where T : class
@@ -48,11 +57,6 @@ public class ControllerActions : IClassFixture<TestWebApplicationFactory<Startup
         return await ConvertResponse<T>(await _client.PutAsync(path, CreateContent(obj)));
     }
 
-    public async Task<TestResult<T>> DeleteAsync<T>(string path) where T : class
-    {
-        return await ConvertResponse<T>(await _client.DeleteAsync(path));
-    }
-
     private static async Task<TestResult<T>> ConvertResponse<T>(HttpResponseMessage message) where T : class
     {
         TestResult<T> newResult = new()
@@ -63,8 +67,7 @@ public class ControllerActions : IClassFixture<TestWebApplicationFactory<Startup
         {
             string resultString = await message.Content.ReadAsStringAsync();
 
-            newResult.Content = JsonSerializer.Deserialize<T>(resultString,
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            newResult.Content = JsonSerializer.Deserialize<T>(resultString, s_jsonSerializerOptions);
         }
         else
         {
@@ -82,6 +85,6 @@ public class ControllerActions : IClassFixture<TestWebApplicationFactory<Startup
 
     private static string JsonSerialize(object obj)
     {
-        return JsonSerializer.Serialize(obj, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        return JsonSerializer.Serialize(obj, s_jsonSerializerOptions);
     }
 }

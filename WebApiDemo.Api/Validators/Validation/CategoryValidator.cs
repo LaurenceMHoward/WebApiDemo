@@ -4,6 +4,7 @@ using WebApiDemo.Service.Domain;
 namespace WebApiDemo.Api.Validators.Validation;
 
 using Dal.Context;
+using Dal.Records;
 using Reference;
 
 public class CategoryValidator : AbstractValidator<CategoryDto>
@@ -48,7 +49,7 @@ public class CategoryValidator : AbstractValidator<CategoryDto>
         string category = categorySet.Category.Trim().ToLower();
         string subCategory = categorySet.SubCategory.Trim().ToLower();
 
-        var item = await _context.FindAnyMatchingLiveCategoryAndSubCategoryAsync(category, subCategory,
+        CategoryRecord? item = await _context.FindAnyMatchingLiveCategoryAndSubCategoryAsync(category, subCategory,
             cancellationToken);
         return item == null;
     }

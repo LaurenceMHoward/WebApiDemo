@@ -78,7 +78,7 @@ public class CategoryIntegrationTests
     [Fact]
     public async Task DeleteCategory_And_GetCategories_CountReduced_Success()
     {
-        var deletingItem = _sut.FirstCategoryItem.Id;
+        Guid? deletingItem = _sut.FirstCategoryItem.Id;
         string target = $"api/1/category/{deletingItem}";
 
         TestResult<CategoryDto> resultMessageDeleted = await _sut.DeleteAsync<CategoryDto>(target);
@@ -96,7 +96,7 @@ public class CategoryIntegrationTests
     public async Task DeleteCategory_And_SaveSameCategory_CountRemainsSame_Success()
     {
         // delete item
-        var deletingItem = _sut.FirstCategoryItem.Id;
+        Guid? deletingItem = _sut.FirstCategoryItem.Id;
         string target = $"api/1/category/{deletingItem}";
         TestResult<CategoryDto> resultMessageDeleted = await _sut.DeleteAsync<CategoryDto>(target);
 

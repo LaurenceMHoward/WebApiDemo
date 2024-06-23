@@ -9,7 +9,7 @@ public static class CategoryMapper
 {
     public static CategoryCommand ToCategoryCommand(this CategoryDto original)
     {
-        var newItem = new CategoryCommand
+        CategoryCommand newItem = new()
         {
             Category = original.Category,
             SubCategory = original.SubCategory,
@@ -21,7 +21,7 @@ public static class CategoryMapper
 
     public static DeleteCategoryCommand ToDeleteCategoryCommand(this CategoryDto original)
     {
-        var newItem = new DeleteCategoryCommand
+        DeleteCategoryCommand newItem = new ()
         {
             Category = original.Category,
             SubCategory = original.SubCategory,
@@ -33,7 +33,7 @@ public static class CategoryMapper
 
     public static CategoryDto ToCategoryDto(this CategoryRecord original)
     {
-        var newItem = new CategoryDto
+        CategoryDto newItem = new ()
         {
             Category = original.Category,
             SubCategory = original.SubCategory,
@@ -45,7 +45,7 @@ public static class CategoryMapper
 
     public static CategoryRecord ToCategoryRecord(this CategoryCommand original)
     {
-        var newItem = new CategoryRecord
+        CategoryRecord newItem = new ()
         {
             Category = original.Category.Trim().ToUpper()[0] + original.Category.Trim().ToLower()[1..],
             SubCategory = original.SubCategory.Trim().ToUpper()[0] + original.SubCategory.Trim().ToLower()[1..],

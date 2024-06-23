@@ -11,7 +11,7 @@ using WebApiDemo.Dal.Records;
 public class TestWebApplicationFactory<TEntryPoint> : WebApplicationFactory<TEntryPoint> where TEntryPoint : class
 {
     private readonly CategoryRecord[] _categories =
-    {
+    [
         new CategoryRecord() { Id = Guid.NewGuid(), Category = "TestA", SubCategory = "TestB" },
         new CategoryRecord() { Id = Guid.NewGuid(), Category = "TestC", SubCategory = "TestD" },
         new CategoryRecord() { Id = Guid.NewGuid(), Category = "TestE", SubCategory = "TestF" },
@@ -19,7 +19,7 @@ public class TestWebApplicationFactory<TEntryPoint> : WebApplicationFactory<TEnt
         {
             Id = Guid.NewGuid(), Category = "TestG", SubCategory = "TestH", IsDeleted = true
         } // this should save as IsDeleted = false
-    };
+    ];
 
     public int CategoryCount()
     {
@@ -46,8 +46,8 @@ public class TestWebApplicationFactory<TEntryPoint> : WebApplicationFactory<TEnt
             ServiceProvider sp = services.BuildServiceProvider();
 
             using IServiceScope scope = sp.CreateScope();
-            var scopedService = scope.ServiceProvider;
-            var db = scopedService.GetRequiredService<WebApiDemoDbContext>();
+            IServiceProvider scopedService = scope.ServiceProvider;
+            WebApiDemoDbContext db = scopedService.GetRequiredService<WebApiDemoDbContext>();
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
             db.Set<CategoryRecord>().AddRange(_categories);

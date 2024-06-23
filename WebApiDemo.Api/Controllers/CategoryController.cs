@@ -9,6 +9,7 @@ using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Serilog;
 using Service.Domain;
 using Service.Mapping;
@@ -57,7 +58,10 @@ public class CategoryController(IMediator mediator, CategoryValidator categoryDb
     {
         try
         {
-            var item = new CategoryDto() { Id = id };
+            CategoryDto item = new()
+            {
+                Id = id
+            };
             if (!item.Id.HasValue)
             {
                 return BadRequest("No Identifier specified");
@@ -99,10 +103,10 @@ public class CategoryController(IMediator mediator, CategoryValidator categoryDb
 
     private List<string> GetErrorsMessages()
     {
-        List<string> errors = new();
-        foreach (var item in ModelState.Values)
+        List<string> errors = [];
+        foreach (ModelStateEntry item in ModelState.Values)
         {
-            foreach (var error in item.Errors)
+            foreach (ModelError error in item.Errors)
             {
                 errors.Add(error.ErrorMessage);
             }

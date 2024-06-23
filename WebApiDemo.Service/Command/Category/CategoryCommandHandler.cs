@@ -19,7 +19,7 @@ public class CategoryCommandHandler : HandlerBase<CategoryCommand, CategoryDto>
         CategoryRecord newRecord = request.ToCategoryRecord();
 
         // need to fetch id, of cats that might be deleted, to map those.
-        var deletedId =
+        CategoryRecord? deletedId =
             await _webApiDemoDbContext.FindAnyMatchingDeletedCategoryAndSubCategoryAsync(newRecord, cancellationToken);
         if (deletedId?.Id is not null)
         {

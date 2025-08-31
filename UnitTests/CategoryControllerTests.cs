@@ -17,13 +17,11 @@ public class CategoryControllerTests
 {
     private readonly Mock<IMediator> _mediator;
     private readonly CategoryController _sut;
-    private readonly Mock<CategoryValidator> _validator;
 
     public CategoryControllerTests()
     {
-        _validator = new Mock<CategoryValidator>();
         _mediator = new Mock<IMediator>();
-        _sut = new CategoryController(_mediator.Object, _validator.Object);
+        _sut = new CategoryController(_mediator.Object);
     }
 
     [Fact]
@@ -32,10 +30,6 @@ public class CategoryControllerTests
         // arrange
         CategoryDto item = new () { Category = "Bumpy", SubCategory = "Tummy" };
         CategoryDto returnItem = new () { Category = "Bumpy", SubCategory = "Tummy", Id = Guid.NewGuid() };
-
-        _validator.Setup(
-                x => x.ValidateAsync(It.IsAny<ValidationContext<CategoryDto>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new ValidationResult());
 
         _mediator.Setup(x => x.Send(It.IsAny<CategoryCommand>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception("Odds Bodkins"));
@@ -47,35 +41,11 @@ public class CategoryControllerTests
     }
 
     [Fact]
-    public async Task SaveCategory_InvalidModeState_Failure()
-    {
-        // arrange
-        CategoryDto item = new () { Category = "Bumpy", SubCategory = "Tummy" };
-        CategoryDto returnItem = new () { Category = "Bumpy", SubCategory = "Tummy", Id = Guid.NewGuid() };
-        List<ValidationFailure> list = [new ValidationFailure("A", "Not So good")];
-
-        _validator.Setup(
-                x => x.ValidateAsync(It.IsAny<ValidationContext<CategoryDto>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new ValidationResult() { Errors = list });
-
-        _mediator.Setup(x => x.Send(It.IsAny<CategoryCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(returnItem);
-
-        ActionResult<CategoryDto> result = await _sut.CreateCategoryAsync(item, default);
-
-        StatusCodeFromActionResult(result).Should().Be(HttpStatusCode.BadRequest);
-    }
-
-    [Fact]
     public async Task SaveCategory_Success()
     {
         // arrange
         CategoryDto item = new () { Category = "Bumpy", SubCategory = "Tummy" };
         CategoryDto returnItem = new () { Category = "Bumpy", SubCategory = "Tummy", Id = Guid.NewGuid() };
-
-        _validator.Setup(
-                x => x.ValidateAsync(It.IsAny<ValidationContext<CategoryDto>>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new ValidationResult());
 
         _mediator.Setup(x => x.Send(It.IsAny<CategoryCommand>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(returnItem);

@@ -4,21 +4,17 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Asp.Versioning;
-using FluentValidation.AspNetCore;
-using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Serilog;
 using Service.Domain;
 using Service.Mapping;
 using Service.Query.Categories;
-using Validators.Validation;
 using WebApiDemo.Api.Controllers.Base;
 
 [ApiVersion("1.0")]
-public class CategoryController(IMediator mediator, CategoryValidator categoryDbValidator) : BaseController(mediator)
+public class CategoryController(IMediator mediator) : BaseController(mediator)
 {
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -31,20 +27,14 @@ public class CategoryController(IMediator mediator, CategoryValidator categoryDb
     {
         try
         {
-            await DatabaseValidation(item, cancellationToken);
-
-            if (ModelState.IsValid)
-            {
-                item = await _mediator.Send(item.ToCategoryCommand(), cancellationToken);
-                return this.Ok(item);
-            }
-
-            return this.BadRequest(GetErrorsMessages());
+            // If validation fails, [ApiController] + AutoValidation will return 400 before this executes.
+            var result = await _mediator.Send(item.ToCategoryCommand(), cancellationToken);
+            return Ok(result);
         }
         catch (Exception ex)
         {
             Log.Logger.Error("Exception Saving Category", ex, item);
-            return this.StatusCode(500);
+            return StatusCode(500);
         }
     }
 
@@ -58,17 +48,9 @@ public class CategoryController(IMediator mediator, CategoryValidator categoryDb
     {
         try
         {
-            CategoryDto item = new()
-            {
-                Id = id
-            };
-            if (!item.Id.HasValue)
-            {
-                return BadRequest("No Identifier specified");
-            }
-
-            item = await _mediator.Send(item.ToDeleteCategoryCommand(), cancellationToken);
-            return Ok(item);
+            var dto = new CategoryDto { Id = id };
+            var result = await _mediator.Send(dto.ToDeleteCategoryCommand(), cancellationToken);
+            return Ok(result);
         }
         catch (Exception ex)
         {
@@ -93,25 +75,5 @@ public class CategoryController(IMediator mediator, CategoryValidator categoryDb
             Log.Logger.Error("Exception Getting categories", ex);
             return StatusCode(500);
         }
-    }
-
-    private async Task DatabaseValidation(CategoryDto item, CancellationToken token)
-    {
-        ValidationResult? validation = await categoryDbValidator.ValidateAsync(item, token);
-        validation.AddToModelState(ModelState, "database");
-    }
-
-    private List<string> GetErrorsMessages()
-    {
-        List<string> errors = [];
-        foreach (ModelStateEntry item in ModelState.Values)
-        {
-            foreach (ModelError error in item.Errors)
-            {
-                errors.Add(error.ErrorMessage);
-            }
-        }
-
-        return errors;
     }
 }

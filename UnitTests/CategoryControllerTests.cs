@@ -26,7 +26,6 @@ public class CategoryControllerTests
     {
         // arrange
         CategoryDto item = new () { Category = "Bumpy", SubCategory = "Tummy" };
-        CategoryDto returnItem = new () { Category = "Bumpy", SubCategory = "Tummy", Id = Guid.NewGuid() };
 
         _mediator.Setup(x => x.Send(It.IsAny<CategoryCommand>(), It.IsAny<CancellationToken>()))
             .ThrowsAsync(new Exception("Odds Bodkins"));

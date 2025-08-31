@@ -2,14 +2,11 @@
 
 using System.Net;
 using FluentAssertions;
-using FluentValidation;
-using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Moq;
 using WebApiDemo.Api.Controllers;
-using WebApiDemo.Api.Validators.Validation;
 using WebApiDemo.Service.Command.Category;
 using WebApiDemo.Service.Domain;
 

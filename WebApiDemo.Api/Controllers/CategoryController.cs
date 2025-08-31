@@ -11,7 +11,7 @@ using Serilog;
 using Service.Domain;
 using Service.Mapping;
 using Service.Query.Categories;
-using WebApiDemo.Api.Controllers.Base;
+using Base;
 
 [ApiVersion("1.0")]
 public class CategoryController(IMediator mediator) : BaseController(mediator)
@@ -33,7 +33,7 @@ public class CategoryController(IMediator mediator) : BaseController(mediator)
         }
         catch (Exception ex)
         {
-            Log.Logger.Error("Exception Saving Category", ex, item);
+            Log.Logger.Error("Exception Saving Category {ex}: {item}", ex, item);
             return StatusCode(500);
         }
     }
@@ -54,7 +54,7 @@ public class CategoryController(IMediator mediator) : BaseController(mediator)
         }
         catch (Exception ex)
         {
-            Log.Logger.Error("Exception Deleting category", ex, id);
+            Log.Logger.Error("Exception Deleting category: {ex}: {id}", ex, id);
             return StatusCode(500);
         }
     }
@@ -72,7 +72,7 @@ public class CategoryController(IMediator mediator) : BaseController(mediator)
         }
         catch (Exception ex)
         {
-            Log.Logger.Error("Exception Getting categories", ex);
+            Log.Logger.Error("Exception Getting categories {ex}", ex);
             return StatusCode(500);
         }
     }

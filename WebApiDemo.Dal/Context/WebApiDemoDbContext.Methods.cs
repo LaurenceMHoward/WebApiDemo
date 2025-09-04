@@ -15,8 +15,8 @@ public partial class WebApiDemoDbContext : IWebApiDemoDbContext
     {
         DbSet<CategoryRecord> ctx = Set<CategoryRecord>();
         return await ctx.AsNoTracking().FirstOrDefaultAsync(x =>
-            x.IsDeleted && x.Category.ToLower() == newRecord.Category.ToLower() &&
-            x.SubCategory.ToLower() == newRecord.SubCategory.ToLower(), cancellationToken);
+            x.IsDeleted && EF.Functions.Collate(x.Category, "Latin1_General_CI_AS") == newRecord.Category &&
+            EF.Functions.Collate(x.SubCategory, "Latin1_General_CI_AS") == newRecord.SubCategory, cancellationToken);
     }
 
     public async Task<CategoryRecord?> FindAnyMatchingLiveCategoryAndSubCategoryAsync(string category,
@@ -24,9 +24,9 @@ public partial class WebApiDemoDbContext : IWebApiDemoDbContext
         CancellationToken cancellationToken)
     {
         return await Set<CategoryRecord>().AsNoTracking().SingleOrDefaultAsync(x =>
-                x.Category.ToLower() == category
-                && x.SubCategory.ToLower() == subCategory &&
-                x.IsDeleted != true,
+                EF.Functions.Collate(x.Category, "Latin1_General_CI_AS") == category
+                && EF.Functions.Collate(x.SubCategory, "Latin1_General_CI_AS") == subCategory &&
+                !x.IsDeleted,
             cancellationToken);
     }
 

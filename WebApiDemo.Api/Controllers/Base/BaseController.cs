@@ -9,5 +9,5 @@ using Microsoft.AspNetCore.Mvc;
     [ApiController]
     public abstract class BaseController(IMediator mediator) : ControllerBase
     {
-        protected readonly IMediator _mediator = mediator;
+        protected readonly IMediator Mediator = mediator;
     }

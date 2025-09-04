@@ -28,7 +28,7 @@ public class CategoryController(IMediator mediator) : BaseController(mediator)
         try
         {
             // If validation fails, [ApiController] + AutoValidation will return 400 before this executes.
-            var result = await _mediator.Send(item.ToCategoryCommand(), cancellationToken);
+            var result = await Mediator.Send(item.ToCategoryCommand(), cancellationToken);
             return Ok(result);
         }
         catch (Exception ex)
@@ -42,14 +42,15 @@ public class CategoryController(IMediator mediator) : BaseController(mediator)
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [Produces("application/json")]
-    [HttpDelete("{id}")]
+    [HttpDelete]
+    [Route("{id}")]
     public async Task<ActionResult<IEnumerable<CategoryDto>>> DeleteCategoryAsync([FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
         try
         {
             var dto = new CategoryDto { Id = id };
-            var result = await _mediator.Send(dto.ToDeleteCategoryCommand(), cancellationToken);
+            var result = await Mediator.Send(dto.ToDeleteCategoryCommand(), cancellationToken);
             return Ok(result);
         }
         catch (Exception ex)
@@ -68,7 +69,7 @@ public class CategoryController(IMediator mediator) : BaseController(mediator)
     {
         try
         {
-            return await _mediator.Send(new GetAllCategories());
+            return await Mediator.Send(new GetAllCategories());
         }
         catch (Exception ex)
         {

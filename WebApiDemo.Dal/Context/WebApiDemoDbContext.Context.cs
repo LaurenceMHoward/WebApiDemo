@@ -8,11 +8,11 @@ namespace WebApiDemo.Dal.Context;
 
 public partial class WebApiDemoDbContext : DbContext
 {
-    private const string _createdDate = "CreatedDate";
-    private const string _defaultSchema = "dbo";
-    private const string _lastUpdatedBy = "LastUpdatedBy";
-    private const string _lastUpdatedDate = "LastUpdatedDate";
-    private const string _softDeleteColumn = "IsDeleted";
+    private const string CreatedDate = "CreatedDate";
+    private const string DefaultSchema = "dbo";
+    private const string LastUpdatedBy = "LastUpdatedBy";
+    private const string LastUpdatedDate = "LastUpdatedDate";
+    private const string SoftDeleteColumn = "IsDeleted";
 
     public WebApiDemoDbContext(DbContextOptions<WebApiDemoDbContext> options)
         : base(options)
@@ -32,28 +32,28 @@ public partial class WebApiDemoDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.HasDefaultSchema(_defaultSchema);
+        modelBuilder.HasDefaultSchema(DefaultSchema);
         modelBuilder.ApplyConfiguration(new CategoryConfiguration()).Entity<CategoryRecord>();
     }
 
     private static void AddedEntityState(EntityEntry entry)
     {
-        entry.Property(_softDeleteColumn).CurrentValue = false;
-        entry.Property(_createdDate).CurrentValue = DateTimeOffset.UtcNow;
+        entry.Property(SoftDeleteColumn).CurrentValue = false;
+        entry.Property(CreatedDate).CurrentValue = DateTimeOffset.UtcNow;
     }
 
     private static void DeleteEntityState(EntityEntry entry)
     {
         entry.State = EntityState.Modified;
-        entry.Property(_softDeleteColumn).CurrentValue = true;
+        entry.Property(SoftDeleteColumn).CurrentValue = true;
         UpdateEntityState(entry);
     }
 
     private static void UpdateEntityState(EntityEntry entry)
     {
-        entry.Property(_lastUpdatedDate).CurrentValue = DateTimeOffset.UtcNow;
-        entry.Property(_lastUpdatedBy).CurrentValue = 0;
-        entry.Property(_createdDate).IsModified = false;
+        entry.Property(LastUpdatedDate).CurrentValue = DateTimeOffset.UtcNow;
+        entry.Property(LastUpdatedBy).CurrentValue = 0;
+        entry.Property(CreatedDate).IsModified = false;
     }
 
     private void UpdateStatuses()

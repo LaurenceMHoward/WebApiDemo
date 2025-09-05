@@ -1,0 +1,13 @@
+<Project>
+	<PropertyGroup>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<DebugSymbols>true</DebugSymbols>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>true</ImplicitUsings>
+		<Deterministic>true</Deterministic>
+		<Nullable>enable</Nullable>
+		<LangVersion>latest</LangVersion>
+		<RuntimeIdentifiers>win-x64;linux-x64;linux-musl-x64</RuntimeIdentifiers>
+	</PropertyGroup>
+</Project>
